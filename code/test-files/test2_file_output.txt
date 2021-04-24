@@ -1,0 +1,10 @@
+main, line 1, function, int, referenced 0 
+x, line 3, variable, int, referenced 3
+y, line 4, variable, long, referenced 3
+z, line 5, variable, long long, referenced 1
+g, line 6, variable, float, referenced 0
+f, line 7, variable, double, referenced 0
+a, line 8, variable, int, referenced 4
+msg, line 18, variable, char*, referenced 0
+int_pointer, line 19, variable, int*, referenced 0
+h, line 20, variable, short, referenced 0 

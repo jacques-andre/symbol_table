@@ -1,0 +1,5 @@
+Variables: 6
+Functions: 1
+If statements: 1
+For loops: 0
+While loops: 0

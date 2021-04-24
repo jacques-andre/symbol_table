@@ -1,0 +1,14 @@
+add, line 1, function, int, referenced 2
+a (add), line 1, variable, int, referenced 1 
+b (add), line 1, variable, int, referenced 1
+sub, line 6, function, int, referenced 1
+c (sub), line 6, variable, int, referenced 1  
+d (sub), line 6, variable, int, referenced 1  
+main, line 11, function, int, referenced 0
+sum, line 13, variable, int, referenced 2
+i, line 14, variable, int, referenced 3
+neg_sum, line 18, variable, int, referenced 2
+j, line 19, variable, int, referenced 3
+result, line 23, variable, int, referenced 5
+s, line 29, variable, long, referenced 7
+s_pointer, line 38, variable, long*, referenced 2 

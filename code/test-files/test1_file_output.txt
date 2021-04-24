@@ -1,0 +1,8 @@
+main, line 1, function, int, referenced 0 
+x, line 3, variable, int, referenced 3
+y, line 4, variable, int, referenced 3
+z, line 5, variable, int, referenced 1
+g, line 6, variable, int, referenced 0
+f, line 7, variable, int, referenced 0
+a, line 8, variable, int, referenced 3
+  
