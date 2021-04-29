@@ -1,2 +1,2 @@
 symbol_table: symbol_table.o
-	g++ -std=c++11 symbol_table.o -o symbol_table
+	g++ -std=c++11 symbol_table.cpp -o symbol_table
