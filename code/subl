@@ -2,7 +2,7 @@ Reading in the file: test-files/test2.c
 main,line 1,function,int,refrenced:0
 x,line 3,variable,int,refrenced:3
 y,line 4,variable,long,refrenced:3
-long,line 5,variable,long,refrenced:0
+z,line 5,variable,long,refrenced:1
 g,line 6,variable,float,refrenced:0
 f,line 7,variable,double,refrenced:0
 a,line 8,variable,int,refrenced:4
