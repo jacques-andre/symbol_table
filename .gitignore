@@ -34,3 +34,4 @@ symbol_table
 *.out
 *.app
 
+.DS_Store # annoying
