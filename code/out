@@ -1,111 +1,16 @@
-Reading in the file: test-files/test3.c
-data_info name:add,token name:a
-data_info name:add,token name:b
-data_info name:a,token name:b
-data_info name:add,token name:sub
-data_info name:a,token name:sub
-data_info name:b,token name:sub
-data_info name:add,token name:c
-data_info name:a,token name:c
-data_info name:b,token name:c
-data_info name:sub,token name:c
-data_info name:add,token name:d
-data_info name:a,token name:d
-data_info name:b,token name:d
-data_info name:sub,token name:d
-data_info name:c,token name:d
-data_info name:add,token name:main
-data_info name:a,token name:main
-data_info name:b,token name:main
-data_info name:sub,token name:main
-data_info name:c,token name:main
-data_info name:d,token name:main
-data_info name:add,token name:sum
-data_info name:a,token name:sum
-data_info name:b,token name:sum
-data_info name:sub,token name:sum
-data_info name:c,token name:sum
-data_info name:d,token name:sum
-data_info name:main,token name:sum
-data_info name:add,token name:i
-data_info name:a,token name:i
-data_info name:b,token name:i
-data_info name:sub,token name:i
-data_info name:c,token name:i
-data_info name:d,token name:i
-data_info name:main,token name:i
-data_info name:sum,token name:i
-data_info name:add,token name:neg_sum
-data_info name:a,token name:neg_sum
-data_info name:b,token name:neg_sum
-data_info name:sub,token name:neg_sum
-data_info name:c,token name:neg_sum
-data_info name:d,token name:neg_sum
-data_info name:main,token name:neg_sum
-data_info name:sum,token name:neg_sum
-data_info name:i,token name:neg_sum
-data_info name:add,token name:j
-data_info name:a,token name:j
-data_info name:b,token name:j
-data_info name:sub,token name:j
-data_info name:c,token name:j
-data_info name:d,token name:j
-data_info name:main,token name:j
-data_info name:sum,token name:j
-data_info name:i,token name:j
-data_info name:neg_sum,token name:j
-data_info name:add,token name:result
-data_info name:a,token name:result
-data_info name:b,token name:result
-data_info name:sub,token name:result
-data_info name:c,token name:result
-data_info name:d,token name:result
-data_info name:main,token name:result
-data_info name:sum,token name:result
-data_info name:i,token name:result
-data_info name:neg_sum,token name:result
-data_info name:j,token name:result
-data_info name:add,token name:s
-data_info name:a,token name:s
-data_info name:b,token name:s
-data_info name:sub,token name:s
-data_info name:c,token name:s
-data_info name:d,token name:s
-data_info name:main,token name:s
-data_info name:sum,token name:s
-data_info name:i,token name:s
-data_info name:neg_sum,token name:s
-data_info name:j,token name:s
-data_info name:result,token name:s
-data_info name:add,token name:s_pointer
-data_info name:a,token name:s_pointer
-data_info name:b,token name:s_pointer
-data_info name:sub,token name:s_pointer
-data_info name:c,token name:s_pointer
-data_info name:d,token name:s_pointer
-data_info name:main,token name:s_pointer
-data_info name:sum,token name:s_pointer
-data_info name:i,token name:s_pointer
-data_info name:neg_sum,token name:s_pointer
-data_info name:j,token name:s_pointer
-data_info name:result,token name:s_pointer
-data_info name:s,token name:s_pointer
-add			1			1		function			int
-a			1			1		variable			int
-b			1			1		variable			int
-sub			1			6		function			int
-c			1			6		variable			int
-d			1			6		variable			int
-main			1			11		function			int
-sum			1			13		variable			int
-i			1			14		variable			int
-neg_sum			1			18		variable			int
-j			1			19		variable			int
-result			1			23		variable			int
-s			1			29		variable			long
-s_pointer			1			38		variable			long*
-Variables: 11
-Functions: 3
-If statements: 2
-For loops: 2
-While loops: 1
+Reading in the file: test-files/test2.c
+main,line 1,function,int,refrenced:0
+x,line 3,variable,int,refrenced:3
+y,line 4,variable,long,refrenced:3
+long,line 5,variable,long,refrenced:0
+g,line 6,variable,float,refrenced:0
+f,line 7,variable,double,refrenced:0
+a,line 8,variable,int,refrenced:4
+msg,line 18,variable,char*,refrenced:0
+int_pointer,line 19,variable,int*,refrenced:0
+h,line 20,variable,short,refrenced:0
+Variables: 9
+Functions: 1
+If statements: 1
+For loops: 0
+While loops: 0

@@ -7,7 +7,7 @@
 struct data_info{
     std::string value_name;
     int line_number;
-    int refrence;
+    int refrence = 0;
     std::string general_type = "";
     std::string data_type = "";
 };
@@ -33,78 +33,74 @@ int main(int argc, char **argv) {
     int num_while = 0;
 
 
-    while(getline(file, line) != NULL) {
+    while(getline(file, line)) {
         std::stringstream stream(line);
 
         line_counter++;
 
         while(stream >> token) {
-            if(token == "int" || token == "int*" || token == "long" || token == "long*" || token == "double" || token == "double*" || token == "char" || token == "char*" || token == "short" || token == "*short" || token == "float" || token == "*float") {
-
-                bool found = false; // have not seen the first token
-
-                //We have an int identifier (variable or function)
-                std::string data_type = token;
-                stream >> token; // Gets the next token (the identifier name)
-                std::string name = token;
-
-                // the problem is here, it is not updating the refrence***
-                for(data_info d : data_mappings){
-                    if(d.value_name == name){
-                        std::cout << "am here!" << std::endl;
-                        d.refrence++;
-                        found = true;
-                        break;
-                    }
+            bool found = false; // have not seen the first token
+            for(data_info& d : data_mappings){
+                if(d.value_name == token){
+                    d.refrence++; // we have found previous token, update the times seen 
+                    found = true;
+                    break;
                 }
+            }
+            if(!found){
+                if(token == "int" || token == "int*" || token == "long" || token == "long*" || token == "double" || token == "double*" || token == "char" || token == "char*" || token == "short" || token == "*short" || token == "float" || token == "*float") {
+                    data_info new_data;
+                    //We have an int identifier (variable or function)
+                    std::string data_type = token;
+                    std::string name = "";
+                    stream >> token; // Gets the next token (the identifier name)
 
-                //If the next token is a (, we have a function, else we have a variable
-                stream >> token;
+                    // weird edge case "long long var_name" < thinks the var_name is long, should be the next token.
+                    if(token != "long"){
+                        name = token;
+                    } else{
+                        stream >> token; // move along one 
+                        name = token; 
+                    }
 
-                if(token == "("){
-                    num_functions++; // we have a function
+                    //If the next token is a (, we have a function, else we have a variable
+                    stream >> token;
 
-                    // updates the vector
-                    if(!found){
-                        data_info new_data;
+                    if(token == "("){
+                        num_functions++; // we have a function
+
+                        // updates the vector
                         new_data.value_name = name;
                         new_data.line_number = line_counter;
-                        new_data.refrence = 1; // first time we have seen the function
                         new_data.general_type = "function";
                         new_data.data_type = data_type;
-                        data_mappings.push_back(new_data);
-                    } 
-                }
-                else {
-                    num_variables++; // we have a variable
+                    }
+                    else {
+                        num_variables++; // we have a variable
 
-                    // updates the vector
-                    if(!found){
-                        data_info new_data;
+                        // updates the vector
                         new_data.value_name = name;
                         new_data.line_number = line_counter;
-                        new_data.refrence = 1; // first time we have seen the function
                         new_data.general_type = "variable";
                         new_data.data_type = data_type;
-                        data_mappings.push_back(new_data);
-                    } 
+                    }
+                    data_mappings.push_back(new_data);
                 }
-            }
-            else if(token == "if") {
-                num_ifs++;
-            }
-            else if(token == "while") {
-                num_while++;
-            }
-            else if(token == "for") {
-                num_for++;
+                else if(token == "if") {
+                    num_ifs++;
+                }
+                else if(token == "while") {
+                    num_while++;
+                }
+                else if(token == "for") {
+                    num_for++;
+                }
             }
         }
     }
     file.close();
-    for(auto &w : data_mappings){
-        std::cout << "\n";
-        std::cout << w.value_name << "," << "line " << w.line_number << "," << w.general_type << "," << w.data_type << "," << "refrenced:" << w.refrence << std::endl;  
+    for(data_info d : data_mappings){
+        std::cout << d.value_name << "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
     }
     std::cout << "Variables: " << num_variables << std::endl;
     std::cout << "Functions: " << num_functions << std::endl;
