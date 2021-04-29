@@ -3,12 +3,15 @@
 #include <fstream>
 #include <sstream>
 
-using namespace std;
-
 int main(int argc, char **argv) {
-    ifstream file("test-files/test3.c");
-    string line;
-    string token;
+    if(argc < 2){
+        std::cout << "Please specify an input file!" << std::endl;
+        return 1; 
+    }
+    std::cout << "Reading in the file: " << argv[1] << std::endl;
+    std::ifstream file(argv[1]);
+    std::string line;
+    std::string token;
 
     // counters
     int line_counter = 0;
@@ -19,7 +22,7 @@ int main(int argc, char **argv) {
     int num_while = 0;
 
     while(getline(file, line)) {
-        stringstream stream(line);
+        std::stringstream stream(line);
 
         line_counter++;
 
@@ -28,7 +31,7 @@ int main(int argc, char **argv) {
                 //We have an int identifier (variable or function)
                 //The next token is the name
                 stream >> token; //Gets the next token (the identifier name)
-                string name = token;
+                std::string name = token;
                 /* cout << "The name of the identifier is: " << name << endl; */
                 /* cout << "The line number it is declared on is " << line_counter << endl; */
                 //If the next token is a (, we have a function, else we have
@@ -60,10 +63,10 @@ int main(int argc, char **argv) {
         }
     }
     file.close();
-    cout << "Variables: " << num_variables << endl;
-    cout << "Functions: " << num_functions << endl;
-    cout << "If statements: " << num_ifs << endl;
-    cout << "For loops: " << num_for << endl;
-    cout << "While loops: " << num_while << endl;
+    std::cout << "Variables: " << num_variables << std::endl;
+    std::cout << "Functions: " << num_functions << std::endl;
+    std::cout << "If statements: " << num_ifs << std::endl;
+    std::cout << "For loops: " << num_for << std::endl;
+    std::cout << "While loops: " << num_while << std::endl;
     return 0; //Program ended succesfully
 }
