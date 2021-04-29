@@ -61,10 +61,7 @@ int main(int argc, char **argv) {
                     } else{
                         stream >> token; // move along one 
                         name = token; 
-<<<<<<< HEAD
                         data_type = "long long";
-=======
->>>>>>> e863f6ccb4a321e9fe366cac8433f6de111426ef
                     }
 
                     //If the next token is a (, we have a function, else we have a variable
