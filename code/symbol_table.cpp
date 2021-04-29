@@ -19,7 +19,8 @@ int main(int argc, char **argv) {
     }
     std::cout << "Reading in the file: " << argv[1] << std::endl;
 
-    std::ifstream file(argv[1]);
+    std::ifstream file(argv[1]); // input file stream
+    std::ofstream out("identifiers.txt");
     std::string line;
     std::string token;
     std::vector<data_info> data_mappings;
@@ -100,13 +101,15 @@ int main(int argc, char **argv) {
         }
     }
     file.close();
+    // for debugging the vector mappings
     for(data_info d : data_mappings){
-        std::cout << d.value_name << "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
+        out << d.value_name << "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
     }
     std::cout << "Variables: " << num_variables << std::endl;
     std::cout << "Functions: " << num_functions << std::endl;
     std::cout << "If statements: " << num_ifs << std::endl;
     std::cout << "For loops: " << num_for << std::endl;
     std::cout << "While loops: " << num_while << std::endl;
+    out.close();
     return 0; //Program ended succesfully
 }

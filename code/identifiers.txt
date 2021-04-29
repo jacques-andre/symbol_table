@@ -1,0 +1,8 @@
+string_length,line 1,function,int,refrenced:2
+str,line 1,variable,char*,refrenced:4
+len,line 3,variable,int,refrenced:7
+str,line 11,variable,char*,refrenced:0
+len,line 13,variable,int,refrenced:0
+main,line 20,function,int,refrenced:0
+name,line 22,variable,char,refrenced:2
+len,line 23,variable,int,refrenced:0
