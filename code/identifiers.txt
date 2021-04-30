@@ -1,8 +1,16 @@
-string_length,line 1,function,int,refrenced:2
-str,line 1,variable,char*,refrenced:4
-len,line 3,variable,int,refrenced:7
-str,line 11,variable,char*,refrenced:0
-len,line 13,variable,int,refrenced:0
-main,line 20,function,int,refrenced:0
-name,line 22,variable,char,refrenced:2
-len,line 23,variable,int,refrenced:0
+Read in the file: test-files/test3.c
+------ 
+a,line 1,variable,int,refrenced:1
+b,line 1,variable,int,refrenced:1
+add,line 1,function,int,refrenced:2
+c,line 6,variable,int,refrenced:1
+d,line 6,variable,int,refrenced:1
+sub,line 6,function,int,refrenced:1
+main,line 11,function,int,refrenced:0
+sum,line 13,variable,int,refrenced:2
+i,line 14,variable,int,refrenced:3
+neg_sum,line 18,variable,int,refrenced:2
+j,line 19,variable,int,refrenced:3
+result,line 23,variable,int,refrenced:5
+s,line 29,variable,long,refrenced:7
+s_pointer,line 38,variable,long*,refrenced:2

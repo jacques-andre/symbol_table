@@ -10,6 +10,7 @@ struct data_info{
     int refrence = 0;
     std::string general_type = "";
     std::string data_type = "";
+    std::string function_param = ""; // holds the name of the function the variable was a parameter of. Ex: hello(int a) function_param = "hello"
 };
 int main(int argc, char **argv) {
     // handle input error
@@ -24,6 +25,8 @@ int main(int argc, char **argv) {
     std::string line;
     std::string token;
     std::vector<data_info> data_mappings;
+
+    out << "Read in the file: " << argv[1] << "\n" "------ \n";
 
     // counters
     int line_counter = 0;
@@ -50,13 +53,16 @@ int main(int argc, char **argv) {
             }
             if(!found){
                 if(token == "int" || token == "int*" || token == "long" || token == "long*" || token == "double" || token == "double*" || token == "char" || token == "char*" || token == "short" || token == "*short" || token == "float" || token == "*float") {
-                    data_info new_data;
-                    //We have an int identifier (variable or function)
+                    data_info new_data; // make new struct, to add to vector
+
+                    // Holds temp vars
                     std::string data_type = token;
                     std::string name = "";
+                    std::string func_token = "";
+
                     stream >> token; // Gets the next token (the identifier name)
 
-                    // weird edge case "long long var_name" < thinks the var_name is long, should be the next token.
+                    // edge case "long long var_name" < thinks the var_name is long, should be the next token.
                     if(token != "long"){
                         name = token;
                     } else{
@@ -65,10 +71,27 @@ int main(int argc, char **argv) {
                         data_type = "long long";
                     }
 
+                    std::cout << "token:" << token << std::endl;
+
                     //If the next token is a (, we have a function, else we have a variable
                     stream >> token;
 
                     if(token == "("){
+                        // check what's inside params
+                        while(func_token != ")"){
+                            stream >> func_token;
+                            if(func_token != "," && func_token != ")" && func_token != "int"){
+                                num_variables++;
+                                std::cout << "func_token:" << func_token << std::endl;
+                                std::cout << "name:" << name << std::endl;
+                                new_data.value_name = func_token;
+                                new_data.line_number = line_counter;
+                                new_data.general_type = "variable";
+                                new_data.data_type = data_type;
+                                new_data.function_param = name;
+                                data_mappings.push_back(new_data);
+                            }
+                        }
                         num_functions++; // we have a function
 
                         // updates the vector
@@ -86,7 +109,7 @@ int main(int argc, char **argv) {
                         new_data.general_type = "variable";
                         new_data.data_type = data_type;
                     }
-                    data_mappings.push_back(new_data);
+                    data_mappings.push_back(new_data); // add to vector
                 }
                 else if(token == "if") {
                     num_ifs++;
@@ -103,7 +126,10 @@ int main(int argc, char **argv) {
     file.close();
     // for debugging the vector mappings
     for(data_info d : data_mappings){
+        // out refers to output file
         out << d.value_name << "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
+        std::cout << d.value_name <<  "(" << d.function_param << ")"
+            <<  "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
     }
     std::cout << "Variables: " << num_variables << std::endl;
     std::cout << "Functions: " << num_functions << std::endl;
