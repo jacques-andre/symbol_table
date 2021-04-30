@@ -79,16 +79,17 @@ int main(int argc, char **argv) {
                     if(token == "("){
                         // check what's inside params
                         while(func_token != ")"){
-                            stream >> func_token;
+                            stream >> func_token; // func_token = the variable name 
                             if(func_token != "," && func_token != ")" && func_token != "int"){
-                                num_variables++;
-                                std::cout << "func_token:" << func_token << std::endl;
-                                std::cout << "name:" << name << std::endl;
+                                num_variables++; // add to counter, we saw a variable inside the params. 
+                                // for debugging:
+                                /* std::cout << "func_token:" << func_token << std::endl; */
+                                /* std::cout << "name:" << name << std::endl; */
                                 new_data.value_name = func_token;
                                 new_data.line_number = line_counter;
                                 new_data.general_type = "variable";
                                 new_data.data_type = data_type;
-                                new_data.function_param = name;
+                                new_data.function_param = name; // this is the function name
                                 data_mappings.push_back(new_data);
                             }
                         }
