@@ -5,13 +5,24 @@
 #include <vector>
 
 struct data_info{
-    std::string value_name;
+    std::string value_name; // name of var or func
     int line_number;
-    int refrence = 0;
-    std::string general_type = "";
-    std::string data_type = "";
+    int refrence = 0; // times seen
+    std::string general_type = ""; // function or variable?
+    std::string data_type = ""; // actual data type (int,bool,etc)
     std::string function_param = ""; // holds the name of the function the variable was a parameter of. Ex: hello(int a) function_param = "hello"
 };
+void pretty_output(std::ofstream &out,std::vector<data_info> &data_mappings){
+    // writes to "identifers.txt", makes sure everything is in the right format.
+    for(data_info d : data_mappings){
+        if(d.value_name == d.function_param || d.function_param.empty()){
+            out << d.value_name << "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;
+        } else{
+        out << d.value_name <<  " (" << d.function_param << ") "
+            <<  "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
+        }
+    }
+}
 int main(int argc, char **argv) {
     // handle input error
     if(argc < 2){
@@ -52,13 +63,14 @@ int main(int argc, char **argv) {
                 }
             }
             if(!found){
-                if(token == "int" || token == "int*" || token == "long" || token == "long*" || token == "double" || token == "double*" || token == "char" || token == "char*" || token == "short" || token == "*short" || token == "float" || token == "*float") {
+                if(token == "int" || token == "char[" || token == "int*" || token == "long" || token == "long*" || token == "double" || token == "double*" || token == "char" || token == "char*" || token == "short" || token == "*short" || token == "float" || token == "*float" || token == "void") {
                     data_info new_data; // make new struct, to add to vector
 
                     // Holds temp vars
                     std::string data_type = token;
                     std::string name = "";
                     std::string func_token = "";
+                    std::string test_token = "";
 
                     stream >> token; // Gets the next token (the identifier name)
 
@@ -71,16 +83,12 @@ int main(int argc, char **argv) {
                         data_type = "long long";
                     }
 
-                    std::cout << "token:" << token << std::endl;
-
                     //If the next token is a (, we have a function, else we have a variable
-                    stream >> token;
-
                     if(token == "("){
                         // check what's inside params
                         while(func_token != ")"){
                             stream >> func_token; // func_token = the variable name 
-                            if(func_token != "," && func_token != ")" && func_token != "int"){
+                            if(func_token != "," && func_token != ")" && func_token != "int" && func_token != "char*" && func_token != "char"){
                                 num_variables++; // add to counter, we saw a variable inside the params. 
                                 // for debugging:
                                 /* std::cout << "func_token:" << func_token << std::endl; */
@@ -100,6 +108,14 @@ int main(int argc, char **argv) {
                         new_data.line_number = line_counter;
                         new_data.general_type = "function";
                         new_data.data_type = data_type;
+                    } else if(token == "[]"){
+                        num_variables++; // we have a variable
+
+                        // updates the vector
+                        new_data.value_name = name;
+                        new_data.line_number = line_counter;
+                        new_data.general_type = "variable";
+                        new_data.data_type = "char[]";
                     }
                     else {
                         num_variables++; // we have a variable
@@ -125,13 +141,7 @@ int main(int argc, char **argv) {
         }
     }
     file.close();
-    // for debugging the vector mappings
-    for(data_info d : data_mappings){
-        // out refers to output file
-        out << d.value_name << "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
-        std::cout << d.value_name <<  "(" << d.function_param << ")"
-            <<  "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
-    }
+    pretty_output(out,data_mappings);
     std::cout << "Variables: " << num_variables << std::endl;
     std::cout << "Functions: " << num_functions << std::endl;
     std::cout << "If statements: " << num_ifs << std::endl;
