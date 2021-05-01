@@ -35,3 +35,4 @@ symbol_table
 *.app
 
 .DS_Store
+test-files/*

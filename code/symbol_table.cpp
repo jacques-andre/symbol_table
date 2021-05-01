@@ -14,6 +14,21 @@ struct token_info{
     std::string last_function; // last function
 };
 
+void pretty_printer(std::vector<token_info> const &token_vector){
+    for(auto &t : token_vector){
+        // check if it's a variable or function
+        if(t.general_type == "function"){
+            std::cout << t.token_name << ", " << "line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
+        } else if(t.general_type == "variable" && t.last_function != "main"){
+            // stops us putting (main) 
+            std::cout << t.token_name << " " << "(" << t.last_function << ")" << "," << " line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
+        } else{
+            std::cout << t.token_name << "," << "line " << t.line_number << "," << t.general_type << "," << t.data_type << "," << t.times_seen << std::endl;
+        }
+
+    }
+}
+
 int main(int argc, char **argv) {
 
     // handle input error
@@ -66,7 +81,7 @@ int main(int argc, char **argv) {
             if(!found){
                 token_info new_insertion; // make a new struct
 
-                if(word == "int" || word == "int*" || word == "long" || word == "long*" || word == "double" || word == "double*" || word == "char" || word == "char*" || word == "short" || word == "*short" || word == "float" || word == "*float" || word == "void"){
+                if(word == "int" || word == "int*" || word == "long" || word == "long*" || word == "double" || word == "double*" || word == "char[]" || word == "char" || word == "char*" || word == "short" || word == "*short" || word == "float" || word == "*float" || word == "void"){
 
                     // hold vars
                     std::string data_name;
@@ -82,7 +97,8 @@ int main(int argc, char **argv) {
                         // if we see "(" will be function.
                         new_insertion.general_type = "function";
                         last_function = data_name;
-                    } else {
+                    } 
+                    else {
                         new_insertion.general_type = "variable";
                     }
 
@@ -95,16 +111,11 @@ int main(int argc, char **argv) {
                     new_insertion.last_function = last_function;
                     token_vector.push_back(new_insertion);
 
-                    // for debugging
-                    /* std::cout << "data_type:" << data_type << "\n"; */
-                    /* std::cout << "data_name:" << data_name << "\n"; */
                 }
             }
         }
     }
-    for(auto &t : token_vector){
-        std::cout << t.token_name << "," << "line " << t.line_number << "," << t.general_type << "," << t.data_type << "," << "refrenced:" << t.times_seen << t.last_function <<"\n";
-    }
+    pretty_printer(token_vector);
     out.close();
     return 0;
 }
