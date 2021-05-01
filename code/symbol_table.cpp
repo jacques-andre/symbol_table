@@ -52,7 +52,11 @@ int main(int argc, char **argv) {
         while (ss >> word) {
             bool found = 0;
             for(auto& t : token_vector){
-                if(word == t.token_name){
+                if(t.general_type == "variable" && word == t.token_name && t.last_function == last_function){
+                    t.times_seen++;
+                    found = 1;
+                    break;
+                } else if(t.general_type == "function" && word == t.token_name){
                     t.times_seen++;
                     found = 1;
                     break;
@@ -77,13 +81,9 @@ int main(int argc, char **argv) {
                     if(word == "("){
                         // if we see "(" will be function.
                         new_insertion.general_type = "function";
-                        if(last_function.length() == 0){
-                            last_function = data_name;
-                        }
+                        last_function = data_name;
                     } else {
                         new_insertion.general_type = "variable";
-                        std::cout << last_function << std::endl;
-                        new_insertion.last_function = last_function;
                     }
 
 
@@ -92,6 +92,7 @@ int main(int argc, char **argv) {
                     new_insertion.line_number = line_counter;
                     new_insertion.times_seen = 0;
                     new_insertion.data_type = data_type;
+                    new_insertion.last_function = last_function;
                     token_vector.push_back(new_insertion);
 
                     // for debugging
