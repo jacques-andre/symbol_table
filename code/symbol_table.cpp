@@ -4,149 +4,106 @@
 #include <sstream>
 #include <vector>
 
-struct data_info{
-    std::string value_name; // name of var or func
-    int line_number;
-    int refrence = 0; // times seen
-    std::string general_type = ""; // function or variable?
-    std::string data_type = ""; // actual data type (int,bool,etc)
-    std::string function_param = ""; // holds the name of the function the variable was a parameter of. Ex: hello(int a) function_param = "hello"
+struct token_info{
+    // this holds information about the current token.
+    int line_number; // line number token is on.
+    int times_seen; // refrences
+    std::string token_name;
+    std::string general_type; // func or var
+    std::string data_type; // int,string,etc
+    std::string last_function; // last function
 };
-void pretty_output(std::ofstream &out,std::vector<data_info> &data_mappings){
-    // writes to "identifers.txt", makes sure everything is in the right format.
-    for(data_info d : data_mappings){
-        if(d.value_name == d.function_param || d.function_param.empty()){
-            out << d.value_name << "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;
-        } else{
-        out << d.value_name <<  " (" << d.function_param << ") "
-            <<  "," << "line " << d.line_number << "," << d.general_type << "," << d.data_type << "," << "refrenced:" << d.refrence << std::endl;  
-        }
-    }
-}
+
 int main(int argc, char **argv) {
+
     // handle input error
-    if(argc < 2){
+    if(argc < 2) {
         std::cout << "Please specify an input file!" << std::endl;
-        return 1; 
+        return 1;
+    } else if(argv[1] == NULL) {
+        std::cout << "Error! Couldn't read " << argv[1] << std::endl;
+    } else {
+        std::cout << "Reading in the file: " << argv[1] << std::endl;
     }
-    std::cout << "Reading in the file: " << argv[1] << std::endl;
 
     std::ifstream file(argv[1]); // input file stream
     std::ofstream out("identifiers.txt");
     std::string line;
-    std::string token;
-    std::vector<data_info> data_mappings;
+    std::vector<token_info> token_vector;
 
     out << "Read in the file: " << argv[1] << "\n" "------ \n";
 
     // counters
-    int line_counter = 0;
+    int line_counter= 0;
     int num_functions = 0;
     int num_variables = 0;
     int num_ifs = 0;
     int num_for = 0;
     int num_while = 0;
 
-
+    std::string last_function;
     while(getline(file, line)) {
-        std::stringstream stream(line);
-
+        // go through file line by line
         line_counter++;
+        std::istringstream ss(line); // tokenize
 
-        while(stream >> token) {
-            bool found = false; // have not seen the first token
-            for(data_info& d : data_mappings){
-                if(d.value_name == token){
-                    d.refrence++; // we have found previous token, update the times seen 
-                    found = true;
+        std::string word; // constantly updating
+
+        while (ss >> word) {
+            bool found = 0;
+            for(auto& t : token_vector){
+                if(word == t.token_name){
+                    t.times_seen++;
+                    found = 1;
                     break;
                 }
             }
+
             if(!found){
-                if(token == "int" || token == "char[" || token == "int*" || token == "long" || token == "long*" || token == "double" || token == "double*" || token == "char" || token == "char*" || token == "short" || token == "*short" || token == "float" || token == "*float" || token == "void") {
-                    data_info new_data; // make new struct, to add to vector
+                token_info new_insertion; // make a new struct
 
-                    // Holds temp vars
-                    std::string data_type = token;
-                    std::string name = "";
-                    std::string func_token = "";
-                    std::string test_token = "";
+                if(word == "int" || word == "int*" || word == "long" || word == "long*" || word == "double" || word == "double*" || word == "char" || word == "char*" || word == "short" || word == "*short" || word == "float" || word == "*float" || word == "void"){
 
-                    stream >> token; // Gets the next token (the identifier name)
+                    // hold vars
+                    std::string data_name;
+                    std::string data_type;
 
-                    // edge case "long long var_name" < thinks the var_name is long, should be the next token.
-                    if(token != "long"){
-                        name = token;
-                    } else{
-                        stream >> token; // move along one 
-                        name = token; 
-                        data_type = "long long";
-                    }
+                    data_type = word; // int,char,etc
+                    ss >> word; // move along one more 
 
-                    //If the next token is a (, we have a function, else we have a variable
-                    if(token == "("){
-                        // check what's inside params
-                        while(func_token != ")"){
-                            stream >> func_token; // func_token = the variable name 
-                            if(func_token != "," && func_token != ")" && func_token != "int" && func_token != "char*" && func_token != "char"){
-                                num_variables++; // add to counter, we saw a variable inside the params. 
-                                // for debugging:
-                                /* std::cout << "func_token:" << func_token << std::endl; */
-                                /* std::cout << "name:" << name << std::endl; */
-                                new_data.value_name = func_token;
-                                new_data.line_number = line_counter;
-                                new_data.general_type = "variable";
-                                new_data.data_type = data_type;
-                                new_data.function_param = name; // this is the function name
-                                data_mappings.push_back(new_data);
-                            }
+                    data_name = word; // variable/func name
+                    ss >> word; // move along one more
+
+                    if(word == "("){
+                        // if we see "(" will be function.
+                        new_insertion.general_type = "function";
+                        if(last_function.length() == 0){
+                            last_function = data_name;
                         }
-                        num_functions++; // we have a function
-
-                        // updates the vector
-                        new_data.value_name = name;
-                        new_data.line_number = line_counter;
-                        new_data.general_type = "function";
-                        new_data.data_type = data_type;
-                    } else if(token == "[]"){
-                        num_variables++; // we have a variable
-
-                        // updates the vector
-                        new_data.value_name = name;
-                        new_data.line_number = line_counter;
-                        new_data.general_type = "variable";
-                        new_data.data_type = "char[]";
+                    } else {
+                        new_insertion.general_type = "variable";
+                        std::cout << last_function << std::endl;
+                        new_insertion.last_function = last_function;
                     }
-                    else {
-                        num_variables++; // we have a variable
 
-                        // updates the vector
-                        new_data.value_name = name;
-                        new_data.line_number = line_counter;
-                        new_data.general_type = "variable";
-                        new_data.data_type = data_type;
-                    }
-                    data_mappings.push_back(new_data); // add to vector
-                }
-                else if(token == "if") {
-                    num_ifs++;
-                }
-                else if(token == "while") {
-                    num_while++;
-                }
-                else if(token == "for") {
-                    num_for++;
+
+                    // make a new insertion to the vector
+                    new_insertion.token_name = data_name;
+                    new_insertion.line_number = line_counter;
+                    new_insertion.times_seen = 0;
+                    new_insertion.data_type = data_type;
+                    token_vector.push_back(new_insertion);
+
+                    // for debugging
+                    /* std::cout << "data_type:" << data_type << "\n"; */
+                    /* std::cout << "data_name:" << data_name << "\n"; */
                 }
             }
         }
     }
-    file.close();
-    pretty_output(out,data_mappings);
-    std::cout << "Variables: " << num_variables << std::endl;
-    std::cout << "Functions: " << num_functions << std::endl;
-    std::cout << "If statements: " << num_ifs << std::endl;
-    std::cout << "For loops: " << num_for << std::endl;
-    std::cout << "While loops: " << num_while << std::endl;
+    for(auto &t : token_vector){
+        std::cout << t.token_name << "," << "line " << t.line_number << "," << t.general_type << "," << t.data_type << "," << "refrenced:" << t.times_seen << t.last_function <<"\n";
+    }
     out.close();
-    return 0; //Program ended succesfully
+    return 0;
 }
