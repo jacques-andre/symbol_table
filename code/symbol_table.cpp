@@ -14,19 +14,26 @@ struct token_info{
     std::string last_function; // last function
 };
 
-void pretty_printer(std::vector<token_info> const &token_vector){
+void pretty_output(std::ofstream &out, std::vector<token_info> const &token_vector){
     for(auto &t : token_vector){
         // check if it's a variable or function
         if(t.general_type == "function"){
-            std::cout << t.token_name << ", " << "line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
+            out << t.token_name << ", " << "line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
         } else if(t.general_type == "variable" && t.last_function != "main"){
             // stops us putting (main) 
-            std::cout << t.token_name << " " << "(" << t.last_function << ")" << "," << " line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
+            out << t.token_name << " " << "(" << t.last_function << ")" << "," << " line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
         } else{
-            std::cout << t.token_name << "," << "line " << t.line_number << "," << t.general_type << "," << t.data_type << "," << t.times_seen << std::endl;
+            // we're in main
+            out << t.token_name << "," << "line " << t.line_number << "," << t.general_type << "," << t.data_type << "," << "refrenced " << t.times_seen << std::endl;
         }
-
     }
+}
+void pretty_console(int& num_functions, int& num_variables, int& num_ifs, int& num_for, int& num_while){
+    std::cout << "Variables: " << num_variables << "\n";
+    std::cout << "Functions: " << num_functions << "\n";
+    std::cout << "If statements: " << num_ifs << "\n";
+    std::cout << "For loops: " << num_for << "\n";
+    std::cout << "While loops: " << num_while << "\n";
 }
 
 int main(int argc, char **argv) {
@@ -90,16 +97,28 @@ int main(int argc, char **argv) {
                     data_type = word; // int,char,etc
                     ss >> word; // move along one more 
 
-                    data_name = word; // variable/func name
-                    ss >> word; // move along one more
+                    if(word == "long"){
+                        ss >> word;
+                        data_name = word;
+                        data_type = "long long";
+                    } else{
+                        data_name = word; // variable/func name
+                        ss >> word; // move along one more
+                    }
+
 
                     if(word == "("){
                         // if we see "(" will be function.
+                        num_functions++;
                         new_insertion.general_type = "function";
                         last_function = data_name;
+                    } else if(word == "[]"){
+                        new_insertion.data_type = "char[]";
+                        num_variables++;
                     } 
                     else {
                         new_insertion.general_type = "variable";
+                        num_variables++;
                     }
 
 
@@ -112,10 +131,19 @@ int main(int argc, char **argv) {
                     token_vector.push_back(new_insertion);
 
                 }
+                else if(word == "if"){
+                    num_ifs++;
+                } else if(word == "for"){
+                    num_for++;
+                } else if(word == "while"){
+                    num_while++;
+                }
             }
         }
     }
-    pretty_printer(token_vector);
+    pretty_output(out,token_vector);
+    pretty_console(num_functions,num_variables,num_ifs,num_for,num_while);
     out.close();
+    std::cout << "identifiers.txt has been written";
     return 0;
 }
