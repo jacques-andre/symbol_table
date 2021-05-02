@@ -106,14 +106,14 @@ int main(int argc, char **argv) {
                         ss >> word; // move along one more
                     }
 
-
                     if(word == "("){
                         // if we see "(" will be function.
                         num_functions++;
                         new_insertion.general_type = "function";
                         last_function = data_name;
                     } else if(word == "[]"){
-                        new_insertion.data_type = "char[]";
+                        data_type = "char[]";
+                        new_insertion.general_type = "variable";
                         num_variables++;
                     } 
                     else {
