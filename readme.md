@@ -5,4 +5,4 @@
 
 ## Problems/Bugs:
 
-Fix `char[]` bug, not working on `test4.c`
+- [x] Fix `char[]` bug, not working on `test4.c`
