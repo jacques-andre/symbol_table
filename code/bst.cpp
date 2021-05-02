@@ -1,5 +1,7 @@
 #include "bst.h"
 #include "symbol_table.h"
+#include <fstream> 
+#include <iostream> 
 
 BST::BST(){
 	root = NULL;
@@ -80,17 +82,25 @@ bool BST::update_symbol(std::string word,std::string last_function, std::string 
 }
 
 
-void BST::inorder_print(){
+void BST::inorder_print(std::ofstream& file){
 	// public
-	inorder_print(root);
+	inorder_print(file,root);
 	std::cout << "\n";
 }
 
-void BST::inorder_print(Node *leaf){
+void BST::inorder_print(std::ofstream& file, Node *leaf){
 	// private
 	if(leaf != NULL){
-		inorder_print(leaf->left);
-		std::cout << leaf-> symbol_data.token_name << "," << leaf -> symbol_data.times_seen << std::endl;
-		inorder_print(leaf->right);
+		inorder_print(file,leaf->left);
+		// using file writing here
+		if(leaf -> symbol_data.general_type == "function"){
+			file << leaf -> symbol_data.token_name << "," << "line " << leaf -> symbol_data.line_number << "," << leaf -> symbol_data.general_type << "," << leaf -> symbol_data.data_type << ",refrenced " << leaf -> symbol_data.times_seen << "\n";
+		} else if(leaf -> symbol_data.general_type == "variable" && leaf -> symbol_data.last_function != "main"){
+			file << leaf -> symbol_data.token_name << " " << "(" << leaf -> symbol_data.last_function << ")" << "," << "line " << leaf -> symbol_data.line_number << "," << leaf -> symbol_data.general_type << "," << leaf -> symbol_data.data_type << ",refrenced " << leaf -> symbol_data.times_seen << "\n";
+		} else{
+			file << leaf -> symbol_data.token_name << "," << "line " << leaf -> symbol_data.line_number << "," << leaf -> symbol_data.general_type << "," << leaf -> symbol_data.data_type << ",refrenced " << leaf -> symbol_data.times_seen << "\n";
+		}
+		inorder_print(file,leaf->right);
 	}
 }
+

@@ -8,20 +8,6 @@
 #include "symbol_table.h" 
 #include "bst.h"
 
-void pretty_output(std::ofstream &out, std::vector<token_info> const &token_vector){
-    for(auto &t : token_vector){
-        // check if it's a variable or function
-        if(t.general_type == "function"){
-            out << t.token_name << ", " << "line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
-        } else if(t.general_type == "variable" && t.last_function != "main"){
-            // stops us putting (main) 
-            out << t.token_name << " " << "(" << t.last_function << ")" << "," << " line " << t.line_number << ", " << t.general_type << ", " << t.data_type << ", " << "refrenced " << t.times_seen << std::endl;
-        } else{
-            // we're in main
-            out << t.token_name << "," << "line " << t.line_number << "," << t.general_type << "," << t.data_type << "," << "refrenced " << t.times_seen << std::endl;
-        }
-    }
-}
 void pretty_console(int& num_functions, int& num_variables, int& num_ifs, int& num_for, int& num_while){
     std::cout << "Variables: " << num_variables << "\n";
     std::cout << "Functions: " << num_functions << "\n";
@@ -141,9 +127,8 @@ int main(int argc, char **argv) {
             }
         }
     }
-    pretty_output(out,token_vector);
     pretty_console(num_functions,num_variables,num_ifs,num_for,num_while);
+    tree -> inorder_print(out); // writes tree to file
     out.close();
-    tree -> inorder_print();
     return 0;
 }
