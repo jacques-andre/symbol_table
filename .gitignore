@@ -37,3 +37,4 @@ symbol_table
 .DS_Store
 test-files/*
 identifiers.txt
+specs.pdf
