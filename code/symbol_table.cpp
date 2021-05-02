@@ -2,13 +2,13 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-#include <vector>
 
 // local includes
 #include "symbol_table.h" 
 #include "bst.h"
 
 void pretty_console(int& num_functions, int& num_variables, int& num_ifs, int& num_for, int& num_while){
+    // this function will output variables "nicely" to the console. 
     std::cout << "Variables: " << num_variables << "\n";
     std::cout << "Functions: " << num_functions << "\n";
     std::cout << "If statements: " << num_ifs << "\n";
@@ -17,7 +17,7 @@ void pretty_console(int& num_functions, int& num_variables, int& num_ifs, int& n
 }
 
 int main(int argc, char **argv) {
-    BST* tree = new BST;
+    BST* tree = new BST; // create a new instance of the "binary search tree"
 
     // handle input error
     if(argc < 2) {
@@ -32,7 +32,6 @@ int main(int argc, char **argv) {
     std::ifstream file(argv[1]); // input file stream
     std::ofstream out("identifiers.txt");
     std::string line;
-    std::vector<token_info> token_vector;
 
     out << "Read in the file: " << argv[1] << "\n" "------ \n";
 
@@ -59,17 +58,6 @@ int main(int argc, char **argv) {
             } else if(tree -> update_function(word,"function") == true){
                 found = 1;
             }
-            /* for(auto& t : token_vector){ */
-            /*     if(t.general_type == "variable" && word == t.token_name && t.last_function == last_function){ */
-            /*         t.times_seen++; */
-            /*         found = 1; */
-            /*         break; */
-            /*     } else if(t.general_type == "function" && word == t.token_name){ */
-            /*         t.times_seen++; */
-            /*         found = 1; */
-            /*         break; */
-            /*     } */
-            /* } */
             if(!found){
                 token_info new_insertion; // make a new struct
 
@@ -107,13 +95,12 @@ int main(int argc, char **argv) {
                     }
 
 
-                    // make a new insertion to the vector
+                    // make a new insertion to the tree
                     new_insertion.token_name = data_name;
                     new_insertion.line_number = line_counter;
                     new_insertion.times_seen = 0;
                     new_insertion.data_type = data_type;
                     new_insertion.last_function = last_function;
-                    /* token_vector.push_back(new_insertion); */
                     tree -> insert(new_insertion);
 
                 }
@@ -127,7 +114,7 @@ int main(int argc, char **argv) {
             }
         }
     }
-    pretty_console(num_functions,num_variables,num_ifs,num_for,num_while);
+    pretty_console(num_functions,num_variables,num_ifs,num_for,num_while); 
     tree -> inorder_print(out); // writes tree to file
     out.close();
     return 0;
