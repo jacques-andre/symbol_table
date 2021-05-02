@@ -4,15 +4,9 @@
 #include <sstream>
 #include <vector>
 
-struct token_info{
-    // this holds information about the current token.
-    int line_number; // line number token is on.
-    int times_seen; // refrences
-    std::string token_name;
-    std::string general_type; // func or var
-    std::string data_type; // int,string,etc
-    std::string last_function; // last function
-};
+// local includes
+#include "symbol_table.h" 
+#include "bst.h"
 
 void pretty_output(std::ofstream &out, std::vector<token_info> const &token_vector){
     for(auto &t : token_vector){
@@ -37,6 +31,7 @@ void pretty_console(int& num_functions, int& num_variables, int& num_ifs, int& n
 }
 
 int main(int argc, char **argv) {
+    BST* tree = new BST;
 
     // handle input error
     if(argc < 2) {
@@ -73,18 +68,22 @@ int main(int argc, char **argv) {
 
         while (ss >> word) {
             bool found = 0;
-            for(auto& t : token_vector){
-                if(t.general_type == "variable" && word == t.token_name && t.last_function == last_function){
-                    t.times_seen++;
-                    found = 1;
-                    break;
-                } else if(t.general_type == "function" && word == t.token_name){
-                    t.times_seen++;
-                    found = 1;
-                    break;
-                }
+            if(tree -> update_symbol(word,last_function,"variable") == true) {
+                found = 1;
+            } else if(tree -> update_function(word,"function") == true){
+                found = 1;
             }
-
+            /* for(auto& t : token_vector){ */
+            /*     if(t.general_type == "variable" && word == t.token_name && t.last_function == last_function){ */
+            /*         t.times_seen++; */
+            /*         found = 1; */
+            /*         break; */
+            /*     } else if(t.general_type == "function" && word == t.token_name){ */
+            /*         t.times_seen++; */
+            /*         found = 1; */
+            /*         break; */
+            /*     } */
+            /* } */
             if(!found){
                 token_info new_insertion; // make a new struct
 
@@ -128,7 +127,8 @@ int main(int argc, char **argv) {
                     new_insertion.times_seen = 0;
                     new_insertion.data_type = data_type;
                     new_insertion.last_function = last_function;
-                    token_vector.push_back(new_insertion);
+                    /* token_vector.push_back(new_insertion); */
+                    tree -> insert(new_insertion);
 
                 }
                 else if(word == "if"){
@@ -144,6 +144,6 @@ int main(int argc, char **argv) {
     pretty_output(out,token_vector);
     pretty_console(num_functions,num_variables,num_ifs,num_for,num_while);
     out.close();
-    std::cout << "identifiers.txt has been written";
+    tree -> inorder_print();
     return 0;
 }
