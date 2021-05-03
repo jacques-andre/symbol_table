@@ -86,16 +86,16 @@ bool BST::update_symbol(std::string word,std::string last_function, std::string 
 }
 
 
-void BST::inorder_print(std::ofstream& file){
+void BST::write_file(std::ofstream& file){
 	// public
-	inorder_print(file,root);
+	write_file(file,root);
 	std::cout << "\n";
 }
 
-void BST::inorder_print(std::ofstream& file, Node *leaf){
+void BST::write_file(std::ofstream& file, Node *leaf){
 	// private
 	if(leaf != NULL){
-		inorder_print(file,leaf->left);
+		write_file(file,leaf->left);
 		// using file writing here
 		if(leaf -> symbol_data.general_type == "function"){
 			file << leaf -> symbol_data.token_name << "," << "line " << leaf -> symbol_data.line_number << "," << leaf -> symbol_data.general_type << "," << leaf -> symbol_data.data_type << ",refrenced " << leaf -> symbol_data.times_seen << "\n";
@@ -104,7 +104,7 @@ void BST::inorder_print(std::ofstream& file, Node *leaf){
 		} else{
 			file << leaf -> symbol_data.token_name << "," << "line " << leaf -> symbol_data.line_number << "," << leaf -> symbol_data.general_type << "," << leaf -> symbol_data.data_type << ",refrenced " << leaf -> symbol_data.times_seen << "\n";
 		}
-		inorder_print(file,leaf->right);
+		write_file(file,leaf->right);
 	}
 }
 

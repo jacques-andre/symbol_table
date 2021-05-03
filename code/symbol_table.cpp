@@ -1,3 +1,4 @@
+// Jacques Andre, 40485967
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -30,7 +31,7 @@ int main(int argc, char **argv) {
     }
 
     std::ifstream file(argv[1]); // input file stream
-    std::ofstream out("identifiers.txt");
+    std::ofstream out("identifiers.txt"); // output file stream
     std::string line;
 
     out << "Read in the file: " << argv[1] << "\n" "------ \n";
@@ -53,9 +54,9 @@ int main(int argc, char **argv) {
 
         while (ss >> word) {
             bool found = 0;
-            if(tree -> update_symbol(word,last_function,"variable") == true) {
+            if(tree -> update_symbol(word,last_function,"variable")) {
                 found = 1;
-            } else if(tree -> update_function(word,"function") == true){
+            } else if(tree -> update_function(word,"function")){
                 found = 1;
             }
             if(!found){
@@ -70,6 +71,7 @@ int main(int argc, char **argv) {
                     data_type = word; // int,char,etc
                     ss >> word; // move along one more 
 
+                    // edge case, things var name is "long" when type is "long long", need to move one more
                     if(word == "long"){
                         ss >> word;
                         data_name = word;
@@ -79,8 +81,8 @@ int main(int argc, char **argv) {
                         ss >> word; // move along one more
                     }
 
+                    // if we see "(" will be function.
                     if(word == "("){
-                        // if we see "(" will be function.
                         num_functions++;
                         new_insertion.general_type = "function";
                         last_function = data_name;
@@ -100,7 +102,7 @@ int main(int argc, char **argv) {
                     new_insertion.times_seen = 0;
                     new_insertion.data_type = data_type;
                     new_insertion.last_function = last_function;
-                    tree -> insert(new_insertion);
+                    tree -> insert(new_insertion); // add a leaf to the tree
 
                 }
                 else if(word == "if"){
@@ -114,8 +116,8 @@ int main(int argc, char **argv) {
         }
     }
     pretty_console(num_functions,num_variables,num_ifs,num_for,num_while); 
-    tree -> inorder_print(out); // writes tree to file
+    tree -> write_file(out); 
     out.close();
-    delete tree;
+    delete tree; // defrence memory
     return 0;
 }
