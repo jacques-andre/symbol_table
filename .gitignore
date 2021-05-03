@@ -38,3 +38,4 @@ symbol_table
 test-files/*
 identifiers.txt
 specs.pdf
+*.zip
