@@ -13,7 +13,7 @@ void pretty_console(int& num_functions, int& num_variables, int& num_ifs, int& n
     std::cout << "Functions: " << num_functions << "\n";
     std::cout << "If statements: " << num_ifs << "\n";
     std::cout << "For loops: " << num_for << "\n";
-    std::cout << "While loops: " << num_while << "\n";
+    std::cout << "While loops: " << num_while;
 }
 
 int main(int argc, char **argv) {
@@ -94,7 +94,6 @@ int main(int argc, char **argv) {
                         num_variables++;
                     }
 
-
                     // make a new insertion to the tree
                     new_insertion.token_name = data_name;
                     new_insertion.line_number = line_counter;
@@ -117,5 +116,6 @@ int main(int argc, char **argv) {
     pretty_console(num_functions,num_variables,num_ifs,num_for,num_while); 
     tree -> inorder_print(out); // writes tree to file
     out.close();
+    delete tree;
     return 0;
 }

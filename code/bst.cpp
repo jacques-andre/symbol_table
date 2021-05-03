@@ -7,6 +7,10 @@ BST::BST(){
 	root = NULL;
 }
 
+BST::~BST(){
+	clear_tree(); // remove all nodes
+}
+
 void BST::insert(token_info symbol_data, Node* leaf){
 	if(symbol_data.token_name.at(0) <= leaf -> symbol_data.token_name.at(0)){
 		if(leaf -> left != NULL){
@@ -101,6 +105,19 @@ void BST::inorder_print(std::ofstream& file, Node *leaf){
 			file << leaf -> symbol_data.token_name << "," << "line " << leaf -> symbol_data.line_number << "," << leaf -> symbol_data.general_type << "," << leaf -> symbol_data.data_type << ",refrenced " << leaf -> symbol_data.times_seen << "\n";
 		}
 		inorder_print(file,leaf->right);
+	}
+}
+
+void BST::clear_tree(){
+	clear_tree(root);
+}
+
+void BST::clear_tree(Node* leaf){
+	// private
+	if(leaf != NULL){
+		clear_tree(leaf->left);
+		clear_tree(leaf->right);
+		delete leaf;
 	}
 }
 
