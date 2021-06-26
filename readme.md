@@ -34,10 +34,6 @@ I have 2 header files used in my program. `bst.h`: holds information surrounding
 files such as `bst.cpp`
 
 ## Running:
-
-To run the program first run `make`, and then:
-
-**Example:**
 ```
 make
 ./symbol_table test-files/test3.c
